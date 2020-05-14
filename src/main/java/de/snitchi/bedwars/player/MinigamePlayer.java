@@ -10,7 +10,7 @@ public abstract class MinigamePlayer {
   /**
    * Dependency injection.
    *
-   * @param player player to create a new zombieTown player
+   * @param player player to create a new minigame player
    */
 
   public MinigamePlayer(Player player) {

@@ -8,11 +8,13 @@ import de.snitchi.bedwars.countdown.LobbyCounter;
 import de.snitchi.bedwars.listener.IngameJoinListener;
 import de.snitchi.bedwars.listener.IngameQuitListener;
 import de.snitchi.bedwars.listener.LobbyInteractListener;
+import de.snitchi.bedwars.listener.LobbyInventoryClickListener;
 import de.snitchi.bedwars.listener.LobbyItemListener;
 import de.snitchi.bedwars.listener.LobbyJoinListener;
 import de.snitchi.bedwars.listener.LobbyPlayerListener;
 import de.snitchi.bedwars.listener.LobbyQuitListener;
 import de.snitchi.bedwars.player.PlayerPool;
+import de.snitchi.bedwars.player.TeamPlayerPool;
 import de.snitchi.bedwars.util.ResourceMessage;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -26,12 +28,13 @@ public class BedwarsPlugin extends JavaPlugin {
 
     ResourceMessage resourceMessage = new ResourceMessage();
     PlayerPool playerPool = new PlayerPool(resourceMessage);
+    TeamPlayerPool teamPlayerPool = new TeamPlayerPool();
     Counter endCounter = new EndCounter(this, resourceMessage);
     Counter ingameCounter = new IngameCounter(this, resourceMessage, endCounter, playerPool);
     Counter lobbyCounter = new LobbyCounter(this, resourceMessage, ingameCounter, playerPool);
 
     registerCommands();
-    registerListener(playerPool, resourceMessage, lobbyCounter);
+    registerListener(playerPool, teamPlayerPool, resourceMessage, lobbyCounter);
   }
 
   public void loadConfig() {
@@ -43,7 +46,7 @@ public class BedwarsPlugin extends JavaPlugin {
     getCommand("gamestate").setExecutor(new GameStateCmd());
   }
 
-  private void registerListener(PlayerPool playerPool,
+  private void registerListener(PlayerPool playerPool, TeamPlayerPool teamPlayerPool,
                                 ResourceMessage resourceMessage,
                                 Counter lobbyCounter) {
     PluginManager pluginManager = getServer().getPluginManager();
@@ -62,6 +65,10 @@ public class BedwarsPlugin extends JavaPlugin {
 
     Listener lobbyInteractListener = new LobbyInteractListener(playerPool);
     pluginManager.registerEvents(lobbyInteractListener, this);
+
+    Listener lobbyInventoryClickListener = new LobbyInventoryClickListener(resourceMessage,
+        teamPlayerPool);
+    pluginManager.registerEvents(lobbyInventoryClickListener, this);
 
     Listener lobbyPlayerListener = new LobbyPlayerListener();
     pluginManager.registerEvents(lobbyPlayerListener, this);

@@ -27,7 +27,7 @@ public class LobbyInventoryClickListener implements Listener {
       return;
     }
 
-    if (event.getClickedInventory().getType().name() != "Test") {
+    if (!event.getView().getTitle().equals("Test")) {
       return;
     }
 

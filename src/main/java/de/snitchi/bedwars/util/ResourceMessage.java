@@ -1,5 +1,6 @@
 package de.snitchi.bedwars.util;
 
+
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import org.bukkit.entity.Player;
